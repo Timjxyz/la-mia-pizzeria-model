@@ -14,10 +14,32 @@ namespace la_mia_pizzeria_static.Controllers
         // GET: MenuPizze
         public IActionResult Index()
         {
-            return View();
+            using(PizzaContext context = new PizzaContext())
+            {
+                List<Pizza> pizzaList = context.Pizzas.ToList();
+                return View(pizzaList);
+
+            }
+        }
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            using (PizzaContext context = new PizzaContext())
+            {
+                Pizza pizzaFound = context.Pizzas.Where(pizza => pizza.PizzaId == id).FirstOrDefault();
+
+                if (pizzaFound == null)
+                {
+                    return NotFound($"Il post con id {id} non è stato trovato");
+                }
+                else
+                {
+                    return View("Details", pizzaFound);
+                }
+            }
         }
 
-       
-        
+
+
     }
 }
